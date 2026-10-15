@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Resume</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px;
+            background: #eee;
+            color: #222;
+            font-family: Arial, sans-serif;
+        }
+
+        .resume {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px;
+            background: white;
+            box-shadow: 0 0 10px #bbb;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-start;
+            border-bottom: 3px solid #222;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            margin-top: 0;
+            overflow-wrap: anywhere;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            overflow-wrap: anywhere;
+        }
+
+        .photo {
+            width: 130px;
+            height: 150px;
+            object-fit: cover;
+            border: 1px solid #555;
+        }
+
+        section {
+            margin-top: 25px;
+            overflow-wrap: anywhere;
+        }
+
+        section h2 {
+            font-size: 20px;
+            border-bottom: 2px solid #222;
+            padding-bottom: 6px;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        .preserve-lines {
+            white-space: pre-line;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th, td {
+            border: 1px solid #555;
+            padding: 9px;
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        .declaration-details {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .signature {
+            text-align: right;
+            align-self: flex-end;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 5px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .error {
+            max-width: 900px;
+            margin: 20px auto;
+            text-align: center;
+            color: #c0392b;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .resume {
+                padding: 18px;
+            }
+
+            .header {
+                flex-direction: column-reverse;
+            }
+
+            .declaration-details {
+                flex-direction: column;
+            }
+
+            .signature {
+                align-self: flex-start;
+                text-align: left;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 5px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .resume {
+                max-width: 100%;
+                padding: 20px;
+                box-shadow: none;
+            }
+
+            .buttons {
+                display: none;
+            }
+
+            section, tr {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="resume" id="resume" hidden>
+    <div class="header">
+        <div>
+            <h1 id="name"></h1>
+            <p><strong>Father's Name:</strong> <span id="fatherName"></span></p>
+            <p><strong>Address:</strong> <span id="address"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <p><strong>Mobile:</strong> <span id="number"></span></p>
+        </div>
+
+        <img id="photo" class="photo" alt="Profile Photo" hidden>
+    </div>
+
+    <section>
+        <h2>Career Objective</h2>
+        <p id="objective" class="preserve-lines"></p>
+    </section>
+
+    <section>
+        <h2>Education Qualification</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Qualification</th>
+                    <th>Board / University</th>
+                    <th>Year</th>
+                    <th>Percentage / CGPA</th>
+                </tr>
+            </thead>
+            <tbody id="qualificationTable"></tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Work Experience</h2>
+        <p><strong>Experience Type:</strong> <span id="experienceType"></span></p>
+
+        <div id="experiencedDetails" hidden>
+            <p><strong>Company:</strong> <span id="company"></span></p>
+            <p><strong>Job Title:</strong> <span id="jobTitle"></span></p>
+            <p><strong>Duration:</strong> <span id="experienceDuration"></span></p>
+            <p><strong>Job Description:</strong></p>
+            <p id="jobDescription" class="preserve-lines"></p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Skills</h2>
+        <p id="skills" class="preserve-lines"></p>
+    </section>
+
+    <section>
+        <h2>Extra Qualification</h2>
+        <p id="extraQualification" class="preserve-lines"></p>
+    </section>
+
+    <section>
+        <h2>Declaration</h2>
+        <p id="declaration" class="preserve-lines"></p>
+
+        <div class="declaration-details">
+            <div>
+                <p><strong>Place:</strong> <span id="place"></span></p>
+                <p><strong>Date:</strong> <span id="declarationDate"></span></p>
+            </div>
+
+            <div class="signature">
+                <p><strong>Signature</strong></p>
+                <p id="signature"></p>
+            </div>
+        </div>
+    </section>
+
+    <div class="buttons">
+        <button id="printButton">Print / Save as PDF</button>
+        <button id="backButton">Back to Form</button>
+    </div>
+</div>
+
+<div id="error" class="error" role="alert" hidden></div>
+
+<script>
+    // Resume data class
+    class ResumeData {
+        constructor(data) {
+            Object.assign(this, data);
+        }
+
+        validate() {
+            if (!this.name.trim()) {
+                throw new Error("Name missing hai. Please form dobara fill karein.");
+            }
+
+            if (this.experienceType === "Experienced") {
+                const requiredFields = [
+                    this.company,
+                    this.jobTitle,
+                    this.experienceDuration,
+                    this.jobDescription
+                ];
+
+                if (requiredFields.some(value => !value.trim())) {
+                    throw new Error(
+                        "Work experience ki details adhuri hain. Form par wapas jaakar sabhi details bharein."
+                    );
+                }
+            }
+        }
+    }
+
+    // Storage class
+    class ResumeStorage {
+        static load() {
+            let qualifications = [];
+
+            try {
+                const saved = sessionStorage.getItem("resumeQualifications");
+                qualifications = saved ? JSON.parse(saved) : [];
+
+                if (!Array.isArray(qualifications)) {
+                    qualifications = [];
+                }
+            } catch {
+                qualifications = [];
+            }
+
+            return new ResumeData({
+                name: sessionStorage.getItem("resumeName") || "",
+                fatherName: sessionStorage.getItem("resumeSon-Of") || "",
+                address: sessionStorage.getItem("resumeAddress") || "",
+                email: sessionStorage.getItem("resumeEmail") || "",
+                number: sessionStorage.getItem("resumeNumber") || "",
+                photo: sessionStorage.getItem("resumePhoto") || "",
+                objective: sessionStorage.getItem("resumeObjective") || "",
+                qualifications: qualifications,
+
+                experienceType:
+                    sessionStorage.getItem("resumeExperienceType") || "Fresher",
+                company: sessionStorage.getItem("resumeCompany") || "",
+                jobTitle: sessionStorage.getItem("resumeJobTitle") || "",
+                experienceDuration:
+                    sessionStorage.getItem("resumeExperienceDuration") || "",
+                jobDescription:
+                    sessionStorage.getItem("resumeJobDescription") || "",
+
+                skills: sessionStorage.getItem("resumeSkills") || "",
+                extraQualification:
+                    sessionStorage.getItem("resumeExtraQualification") || "",
+                declaration: sessionStorage.getItem("resumeDeclaration") || "",
+                place: sessionStorage.getItem("resumePlace") || "",
+                declarationDate:
+                    sessionStorage.getItem("resumeDeclarationDate") || "",
+                signature: sessionStorage.getItem("resumeSignature") || ""
+            });
+        }
+    }
+
+    // Qualification table class
+    class QualificationRenderer {
+        constructor(tableId) {
+            this.table = document.getElementById(tableId);
+        }
+
+        render(qualifications) {
+            this.table.replaceChildren();
+
+            if (!qualifications.length) {
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+
+                cell.colSpan = 4;
+                cell.textContent = "No qualification added.";
+                row.appendChild(cell);
+                this.table.appendChild(row);
+                return;
+            }
+
+            qualifications.forEach(qualification => {
+                const row = document.createElement("tr");
+
+                [
+                    qualification.name,
+                    qualification.board,
+                    qualification.year,
+                    qualification.percentage
+                ].forEach(value => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value || "";
+                    row.appendChild(cell);
+                });
+
+                this.table.appendChild(row);
+            });
+        }
+    }
+
+    // Resume display class
+    class ResumeView {
+        constructor() {
+            this.resume = document.getElementById("resume");
+            this.error = document.getElementById("error");
+
+            this.qualificationRenderer =
+                new QualificationRenderer("qualificationTable");
+        }
+
+        render(data) {
+            const textFields = {
+                name: data.name,
+                fatherName: data.fatherName,
+                address: data.address,
+                email: data.email,
+                number: data.number,
+                objective: data.objective,
+                experienceType: data.experienceType,
+                company: data.company,
+                jobTitle: data.jobTitle,
+                experienceDuration: data.experienceDuration,
+                jobDescription: data.jobDescription,
+                skills: data.skills,
+                extraQualification: data.extraQualification,
+                declaration: data.declaration,
+                place: data.place,
+                declarationDate: data.declarationDate,
+                signature: data.signature || data.name
+            };
+
+            Object.entries(textFields).forEach(([id, value]) => {
+                document.getElementById(id).textContent = value || "";
+            });
+
+            const isExperienced = data.experienceType === "Experienced";
+
+            document.getElementById("experiencedDetails").hidden =
+                !isExperienced;
+
+            const photo = document.getElementById("photo");
+
+            if (data.photo && data.photo.startsWith("data:image/")) {
+                photo.src = data.photo;
+                photo.hidden = false;
+            } else {
+                photo.removeAttribute("src");
+                photo.hidden = true;
+            }
+
+            this.qualificationRenderer.render(data.qualifications);
+
+            this.resume.hidden = false;
+            this.error.hidden = true;
+        }
+
+        showError(message) {
+            this.resume.hidden = true;
+            this.error.textContent = message;
+            this.error.hidden = false;
+        }
+    }
+
+    // Main application class
+    class ResumeApp {
+        constructor() {
+            this.view = new ResumeView();
+            this.init();
+        }
+
+        init() {
+            try {
+                const data = ResumeStorage.load();
+                data.validate();
+                this.view.render(data);
+
+                document.getElementById("printButton")
+                    .addEventListener("click", () => window.print());
+
+                document.getElementById("backButton")
+                    .addEventListener("click", () => {
+                        window.location.href = "index.html";
+                    });
+            } catch (error) {
+                this.view.showError(error.message);
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        new ResumeApp();
+    });
+</script>
+</body>
+</html>

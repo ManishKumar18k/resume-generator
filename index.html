@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Generator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f3f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            border: none;
+        }
+
+        button {
+            padding: 11px 18px;
+            margin-top: 18px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            background: #222;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .add-btn {
+            background: #1769aa;
+        }
+
+        .remove-btn {
+            background: #c0392b;
+        }
+
+        .qualification {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .error-message {
+            color: #c0392b;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Resume Generator</h1>
+
+    <form id="resumeForm">
+        <h2>Personal Details</h2>
+
+        <label for="name">Full Name *</label>
+        <input type="text" id="name" required>
+
+        <label for="fatherName">Father's Name</label>
+        <input type="text" id="fatherName">
+
+        <label for="address">Address</label>
+        <textarea id="address"></textarea>
+
+        <label for="email">Email</label>
+        <input type="email" id="email">
+
+        <label for="number">Mobile Number</label>
+        <input type="tel" id="number">
+
+        <label for="photo">Profile Photo</label>
+        <input type="file" id="photo" accept="image/*">
+
+        <h2>Career Objective</h2>
+        <label for="objective">Career Objective</label>
+        <textarea id="objective">To obtain a challenging position where I can use my skills and knowledge for the growth of the organization.</textarea>
+
+        <h2>Education Qualification</h2>
+        <div id="qualificationContainer">
+            <div class="qualification">
+                <label>Qualification</label>
+                <input type="text" class="qualificationName" placeholder="e.g. BCA">
+
+                <label>Board / University</label>
+                <input type="text" class="board" placeholder="Board or University">
+
+                <label>Year</label>
+                <input type="text" class="year" placeholder="e.g. 2025">
+
+                <label>Percentage / CGPA</label>
+                <input type="text" class="percentage" placeholder="e.g. 75%">
+            </div>
+        </div>
+
+        <button type="button" class="add-btn" id="addQualification">
+            + Add Qualification
+        </button>
+
+        <h2>Work Experience</h2>
+
+        <label for="experienceType">Select Experience Type *</label>
+        <select id="experienceType">
+            <option value="Fresher" selected>Fresher</option>
+            <option value="Experienced">Experienced</option>
+        </select>
+
+        <div id="experienceDetails" hidden>
+            <label for="company">Company Name *</label>
+            <input type="text" id="company" placeholder="Enter company name">
+
+            <label for="jobTitle">Job Title *</label>
+            <input type="text" id="jobTitle" placeholder="e.g. Web Developer">
+
+            <label for="experienceDuration">Duration *</label>
+            <input type="text" id="experienceDuration" placeholder="e.g. Jan 2024 - Dec 2025">
+
+            <label for="jobDescription">Job Description *</label>
+            <textarea id="jobDescription" placeholder="Describe your responsibilities"></textarea>
+        </div>
+
+        <h2>Skills</h2>
+        <label for="skills">Your Skills</label>
+        <textarea id="skills" placeholder="e.g. HTML, CSS, JavaScript, Communication"></textarea>
+
+        <h2>Extra Qualification</h2>
+        <label for="extraQualification">Courses / Certificates</label>
+        <textarea id="extraQualification" placeholder="e.g. ADCA, CCC, Web Development Certificate"></textarea>
+
+        <h2>Declaration</h2>
+        <label for="declaration">Declaration Statement</label>
+        <textarea id="declaration">I hereby declare that the information given above is true and correct to the best of my knowledge and belief.</textarea>
+
+        <label for="place">Place</label>
+        <input type="text" id="place">
+
+        <label for="declarationDate">Date</label>
+        <input type="date" id="declarationDate">
+
+        <label for="signature">Signature / Full Name</label>
+        <input type="text" id="signature">
+
+        <p id="errorMessage" class="error-message" role="alert"></p>
+
+        <button type="submit">Generate Resume</button>
+    </form>
+</div>
+
+<script>
+    // Qualification class
+    class Qualification {
+        constructor(name, board, year, percentage) {
+            this.name = name;
+            this.board = board;
+            this.year = year;
+            this.percentage = percentage;
+        }
+    }
+
+    // Resume data class
+    class ResumeData {
+        constructor(data) {
+            Object.assign(this, data);
+        }
+
+        save() {
+            const fields = {
+                resumeName: this.name,
+                "resumeSon-Of": this.fatherName,
+                resumeAddress: this.address,
+                resumeEmail: this.email,
+                resumeNumber: this.number,
+                resumePhoto: this.photo,
+                resumeObjective: this.objective,
+                resumeQualifications: JSON.stringify(this.qualifications),
+                resumeExperienceType: this.experienceType,
+                resumeCompany: this.company,
+                resumeJobTitle: this.jobTitle,
+                resumeExperienceDuration: this.experienceDuration,
+                resumeJobDescription: this.jobDescription,
+                resumeSkills: this.skills,
+                resumeExtraQualification: this.extraQualification,
+                resumeDeclaration: this.declaration,
+                resumePlace: this.place,
+                resumeDeclarationDate: this.declarationDate,
+                resumeSignature: this.signature
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+                sessionStorage.setItem(key, value ?? "");
+            });
+        }
+    }
+
+    // Form class
+    class ResumeForm {
+        constructor() {
+            this.form = document.getElementById("resumeForm");
+            this.experienceType = document.getElementById("experienceType");
+            this.experienceDetails = document.getElementById("experienceDetails");
+            this.errorMessage = document.getElementById("errorMessage");
+
+            this.bindEvents();
+            this.toggleExperience();
+        }
+
+        bindEvents() {
+            this.experienceType.addEventListener("change", () => {
+                this.toggleExperience();
+            });
+
+            document.getElementById("addQualification")
+                .addEventListener("click", () => {
+                    this.addQualification();
+                });
+
+            this.form.addEventListener("submit", async (event) => {
+                await this.generateResume(event);
+            });
+        }
+
+        toggleExperience() {
+            const isExperienced = this.experienceType.value === "Experienced";
+
+            this.experienceDetails.hidden = !isExperienced;
+
+            ["company", "jobTitle", "experienceDuration", "jobDescription"]
+                .forEach(id => {
+                    const input = document.getElementById(id);
+                    input.required = isExperienced;
+
+                    if (!isExperienced) {
+                        input.value = "";
+                    }
+                });
+        }
+
+        addQualification() {
+            const box = document.createElement("div");
+            box.className = "qualification";
+
+            box.innerHTML = `
+                <label>Qualification</label>
+                <input type="text" class="qualificationName" placeholder="e.g. BCA">
+
+                <label>Board / University</label>
+                <input type="text" class="board" placeholder="Board or University">
+
+                <label>Year</label>
+                <input type="text" class="year" placeholder="e.g. 2025">
+
+                <label>Percentage / CGPA</label>
+                <input type="text" class="percentage" placeholder="e.g. 75%">
+
+                <button type="button" class="remove-btn">Remove</button>
+            `;
+
+            box.querySelector(".remove-btn").addEventListener("click", () => {
+                box.remove();
+            });
+
+            document.getElementById("qualificationContainer").appendChild(box);
+        }
+
+        getQualifications() {
+            return [...document.querySelectorAll(".qualification")]
+                .map(box => new Qualification(
+                    box.querySelector(".qualificationName").value.trim(),
+                    box.querySelector(".board").value.trim(),
+                    box.querySelector(".year").value.trim(),
+                    box.querySelector(".percentage").value.trim()
+                ))
+                .filter(q => q.name || q.board || q.year || q.percentage);
+        }
+
+        getPhoto() {
+            const file = document.getElementById("photo").files[0];
+
+            if (!file) {
+                return Promise.resolve(sessionStorage.getItem("resumePhoto") || "");
+            }
+
+            if (!file.type.startsWith("image/")) {
+                return Promise.reject(new Error("Please select a valid image."));
+            }
+
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error("Photo could not be read."));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async generateResume(event) {
+            event.preventDefault();
+            this.errorMessage.textContent = "";
+
+            const isExperienced = this.experienceType.value === "Experienced";
+
+            if (isExperienced) {
+                const requiredIds = [
+                    "company",
+                    "jobTitle",
+                    "experienceDuration",
+                    "jobDescription"
+                ];
+
+                const missing = requiredIds.some(id =>
+                    !document.getElementById(id).value.trim()
+                );
+
+                if (missing) {
+                    this.errorMessage.textContent =
+                        "Experienced select kiya hai. Please work experience ki saari details bharein.";
+                    return;
+                }
+            }
+
+            try {
+                const resume = new ResumeData({
+                    name: document.getElementById("name").value.trim(),
+                    fatherName: document.getElementById("fatherName").value.trim(),
+                    address: document.getElementById("address").value.trim(),
+                    email: document.getElementById("email").value.trim(),
+                    number: document.getElementById("number").value.trim(),
+                    photo: await this.getPhoto(),
+                    objective: document.getElementById("objective").value.trim(),
+                    qualifications: this.getQualifications(),
+
+                    experienceType: this.experienceType.value,
+                    company: isExperienced ? document.getElementById("company").value.trim() : "",
+                    jobTitle: isExperienced ? document.getElementById("jobTitle").value.trim() : "",
+                    experienceDuration: isExperienced ? document.getElementById("experienceDuration").value.trim() : "",
+                    jobDescription: isExperienced ? document.getElementById("jobDescription").value.trim() : "",
+
+                    skills: document.getElementById("skills").value.trim(),
+                    extraQualification: document.getElementById("extraQualification").value.trim(),
+                    declaration: document.getElementById("declaration").value.trim(),
+                    place: document.getElementById("place").value.trim(),
+                    declarationDate: document.getElementById("declarationDate").value,
+                    signature: document.getElementById("signature").value.trim()
+                });
+
+                resume.save();
+                window.location.href = "resume.html";
+            } catch (error) {
+                this.errorMessage.textContent = error.message;
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        new ResumeForm();
+    });
+</script>
+</body>
+</html>
